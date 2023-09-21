@@ -36,6 +36,8 @@ SELECT * FROM employees
 WHERE manager_id IN(100,101,102);
 
 SELECT * FROM employees
+
+
 WHERE job_id IN('IT_PROG','AD_VP');
 
 -- LIKE ¿¬»êÀÚ
