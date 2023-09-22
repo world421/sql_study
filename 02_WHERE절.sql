@@ -68,7 +68,7 @@ SELECT * FROM employees
 WHERE commission_pct IS NOT NULL;
 
 
--- AND, OR 
+-- AND, OR 논리연산
 -- AND가 OR보다 연산 순서가 빠름.
 SELECT * FROM employees
 WHERE job_id ='IT_PROG'
