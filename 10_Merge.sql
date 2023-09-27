@@ -109,11 +109,12 @@ ROLLBACK;
 
 
 CREATE TABLE DEPTS AS  
-(SELECT department_id, department_name, manager_id, location_id
-FROM departments );
+(SELECT * FROM departments );
 
 INSERT INTO depts
-VALUES(320, '영업',303,1700);
+VALUES(320, '영업', 303, 1700);
+
+--- 문제 2
 
 UPDATE depts SET department_name = 'IT bank'
 WHERE department_name = 'IT Support';
@@ -121,11 +122,12 @@ WHERE department_name = 'IT Support';
 UPDATE depts SET manager_id = 301
 WHERE department_id = 290;
 
-UPDATE depts SET department_name = 'IT Help'
+UPDATE depts 
+SET 
+    department_name = 'IT Help',
+    manager_id= 303,
+    location_id = 1800
 WHERE department_name = 'IT Helpdesk' ;
-
-UPDATE depts SET manager_id= 303,location_id = 1800
-WHERE department_name = 'IT Help' ;
 
 -- 문제 2-4 내용을 변경합니다. 
 -- 회계, 재정, 인사, 영업부의 매니저 아이디를 301로 일괄 변경하세요.
@@ -134,11 +136,15 @@ UPDATE depts
         manager_id = 301  
 WHERE department_id = 320;
 
+-- 문제3
 DELETE FROM depts 
-WHERE  department_id = 320;
+WHERE  department_id = (SELECT department_id FROM depts
+                        WHERE department_name = '영업');
 
 DELETE FROM depts 
 WHERE  department_id = 220;
+
+-- 문제 4
 
 DELETE FROM depts 
 WHERE department_id > 200;
@@ -151,13 +157,14 @@ MERGE INTO depts a
          (SELECT * FROM departments) b 
     ON  
          (a.department_id = b.department_id) 
-WHEN MATCHED THEN
+WHEN MATCHED THEN -- 조건이 일치하는 경우 ! 
     UPDATE SET 
+     -- 조건절에서 사용하는 건 update하면 오류 !
         a.department_name = b.department_name,
         a.manager_id = b.manager_id,
         a.location_id = b.location_id
 
-WHEN NOT MATCHED THEN
+WHEN NOT MATCHED THEN --일치하지않는다 ? 한쪽에만 데이터가 있다 
     INSERT  VALUES 
     (b.department_id, b.department_name,
     b.manager_id, b.location_id);
@@ -165,8 +172,7 @@ WHEN NOT MATCHED THEN
 ---------------------------------
 
 CREATE TABLE jobs_it AS  
-(SELECT job_id, job_title, min_salary, max_salary
- FROM jobs WHERE min_salary > 6000 );
+(SELECT * FROM jobs WHERE min_salary > 6000 );
         
 INSERT INTO jobs_it
 VALUES('SEC_DEV', '보안개발팀', 6000,19000);
