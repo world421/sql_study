@@ -17,6 +17,7 @@ INSERT INTO departments
 VALUES 
     (300, 1700);
     
+    
 
 -- 사본 테이블 생성
 -- 사본 테이블 생성할 때 그냥 생성하면 -> 조회된 데이터까지 모두 복사
@@ -70,6 +71,8 @@ SELECT * FROM emps;
 
 ---------------------------------------------
 -- DELETE 
+-- 행 날리는거라 컬럼 지목안해도됨! 
+-- pk 많이 지목함 
 DELETE FROM emps 
 WHERE  employee_id =103;
 

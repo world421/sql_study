@@ -208,8 +208,7 @@ SELECT * FROM
     (SELECT ROWNUM rn , tal.*
     FROM(
         SELECT 
-        employee_id, 
-        concat(first_name, last_name),
+        employee_id, concat(first_name, last_name),
         phone_number,hire_date, e.department_id,
         d.department_name
         FROM employees e
@@ -225,33 +224,64 @@ WHERE rn > 0 AND rn <=10;
 --EMPLOYEES 와 DEPARTMENTS 테이블에서 JOB_ID가 SA_MAN 사원의 정보의 LAST_NAME, JOB_ID, 
 DEPARTMENT_ID,DEPARTMENT_NAME을 출력하세요.
 */
-
-SELECT 
-    last_name, job_id, d.department_id, department_name
-FROM employees e
+SELECT
+    tbl.*, d.department_name
+FROM
+    (
+    SELECT
+        last_name, job_id, department_id
+    FROM employees
+    WHERE job_id = 'SA_MAN'
+    ) tbls
 JOIN departments d
-ON e.department_id = d.department_id
-WHERE job_id = 'SA_MAN';
-
+ON tbl.department_id = d.department_id;
 
 /*
 문제 14
 --DEPARTMENT테이블에서 각 부서의 ID, NAME, MANAGER_ID와 부서에 속한 인원수를 출력하세요.
 --인원수 기준 내림차순 정렬하세요.
---사람이 없는 부서는 출력하지 뽑지 않습니다.
+--사람이 없는 부서는 출력하지 않습니다.
 */
-
 SELECT 
-
-FROM  
-
+    d.department_id, d.department_name, d.manager_id,
+    a.total
+FROM departments d
+JOIN 
+    (
+    SELECT
+        department_id, COUNT(*) AS total
+    FROM employees
+    GROUP BY department_id
+    )a
+ON d.department_id = a.department_id
+ORDER BY a.total DESC;
 
 
 /*
 문제 15
 --부서에 대한 정보 전부와, 주소, 우편번호, 부서별 평균 연봉을 구해서 출력하세요.
 --부서별 평균이 없으면 0으로 출력하세요.
+
 */
+
+SELECT 
+    d.*,
+    loc.street_address,loc.postal_code,
+    NVL(tbl.result,0) as result
+FROM departments d
+JOIN locations loc
+ON d.location_id =loc.location_id
+LEFT JOIN
+    (
+    SELECT 
+        department_id,
+        TRUNC(AVG(salary),0) AS result 
+    FROM employees
+    GROUP BY department_id
+    ) tbl
+ON d.department_id = tbl.department_id;
+    -- inner join 쓰면 없으면 0우로 출력 
+    -- 왼쪽 기준인 거는 다 나와야하니까 
 
 /*
 문제 16
@@ -259,5 +289,28 @@ FROM
 ROWNUM을 붙여 1-10 데이터 까지만 출력하세요.
 */
 
-
-
+SELECT * FROM
+    (
+    SELECT ROWNUM AS rn, tbl2.*
+        FROM
+        (
+        SELECT
+            d.*,
+            loc.street_address, loc.postal_code,
+            NVL(tbl.result, 0) AS 부서별평균급여
+        FROM departments d
+        JOIN locations loc
+        ON d.location_id = loc.location_id
+        LEFT JOIN
+            (
+            SELECT
+                department_id,
+                TRUNC(AVG(salary), 0) AS result
+            FROM employees
+            GROUP BY department_id
+            ) tbl
+        ON d.department_id = tbl.department_id
+        ORDER BY d.department_id DESC
+        ) tbl2
+    )
+WHERE rn > 0 AND rn <= 10;
