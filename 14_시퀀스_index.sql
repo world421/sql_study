@@ -27,8 +27,7 @@ CREATE TABLE dept2(
     
 -- 시퀀스 사용하기 (NEXTVAL , CURRVAL)
 INSERT INTO dept2
-VALUES(dept2_seq.NEXTVAL ,'tset','test',sysdate);
-
+VALUES(dept2_seq.NEXTVAL ,'test','test',sysdate);
 
 SELECT dept2_seq.CURRVAL FROM dual;
 
