@@ -64,9 +64,9 @@ BEGIN
     -- 동일한 job_id가 있는지부터 체크
     -- 이미 존재한다면 1, 존재하지 않는다면 0 -> v_cnt 에 저장.! 
     SELECT
-        COUNT(*)
+        COUNT(*) 
     INTO
-        v_cnt
+        v_cnt -- 조회결과 cnt에 대입
     FROM jobs
     WHERE job_id = p_job_id;
     -- 조회하고 
@@ -75,7 +75,7 @@ BEGIN
         VALUES(p_job_id,p_job_title,p_min_sal,p_max_sal);
     ELSE -- 있다면 UPDATE
         UPDATE jobs
-        SET job_title = p_job_title,
+        SET job_title = p_job_title,  
         min_salary = p_min_sal,
         max_salary = p_max_sal
         WHERE job_id = p_job_id; -- job_id는 pk라 지목 용도라 수정하지 않았음

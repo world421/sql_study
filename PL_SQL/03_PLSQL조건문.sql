@@ -28,7 +28,8 @@ BEGIN
     
     SELECT 
         salary
-    INTO v_salary
+    INTO 
+        v_salary
     FROM employees
     WHERE department_id = v_department_id
     AND ROWNUM =1;
